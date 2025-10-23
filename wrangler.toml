@@ -25,6 +25,15 @@ name = "cloudflare-docker-proxy"
 #   { pattern = "ghcr.libcuda.so", custom_domain = true },
 #   { pattern = "cloudsmith.libcuda.so", custom_domain = true },
 # ]
+routes = [
+  { pattern = "docker.mydomain.com", custom_domain = true },
+  { pattern = "quay.mydomain.com", custom_domain = true },
+  { pattern = "gcr.mydomain.com", custom_domain = true },
+  { pattern = "k8s-gcr.mydomain.com", custom_domain = true },
+  { pattern = "k8s.mydomain.com", custom_domain = true },
+  { pattern = "ghcr.mydomain.com", custom_domain = true },
+  { pattern = "cloudsmith.mydomain.com", custom_domain = true },
+]
 
 [env.production.vars]
 MODE = "production"
@@ -33,6 +42,7 @@ TARGET_UPSTREAM = ""
 [env.staging]
 name = "cloudflare-docker-proxy-staging"
 # route = { pattern = "docker-staging.libcuda.so", custom_domain = true }
+route = { pattern = "docker-staging.cy-ladder.top", custom_domain = true }
 
 [env.staging.vars]
 MODE = "staging"
