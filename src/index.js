@@ -6,13 +6,18 @@ addEventListener("fetch", (event) => {
 const dockerHub = "https://registry-1.docker.io";
 
 const routes = {
-  "docker.mydomain.com": "https://registry-1.docker.io",
-  "quay.mydomain.com": "https://quay.io",
-  "gcr.mydomain.com": "https://gcr.io",
-  "k8s-gcr.mydomain.com": "https://k8s.gcr.io",
-  "k8s.mydomain.com": "https://registry.k8s.io",
-  "ghcr.mydomain.com": "https://ghcr.io",
-  "cloudsmith.mydomain.com": "https://docker.cloudsmith.io"
+  // production
+  ["docker." + CUSTOM_DOMAIN]: dockerHub,
+  ["quay." + CUSTOM_DOMAIN]: "https://quay.io",
+  ["gcr." + CUSTOM_DOMAIN]: "https://gcr.io",
+  ["k8s-gcr." + CUSTOM_DOMAIN]: "https://k8s.gcr.io",
+  ["k8s." + CUSTOM_DOMAIN]: "https://registry.k8s.io",
+  ["ghcr." + CUSTOM_DOMAIN]: "https://ghcr.io",
+  ["cloudsmith." + CUSTOM_DOMAIN]: "https://docker.cloudsmith.io",
+  ["ecr." + CUSTOM_DOMAIN]: "https://public.ecr.aws",
+
+  // staging
+  ["docker-staging." + CUSTOM_DOMAIN]: dockerHub,
 };
 
 function routeByHosts(host) {
@@ -24,11 +29,21 @@ function routeByHosts(host) {
   }
   return "";
 }
+import DOCS from './help.html'
 
 async function handleRequest(request) {
   const url = new URL(request.url);
   if (url.pathname == "/") {
     return Response.redirect(url.protocol + "//" + url.host + "/v2/", 301);
+  }
+
+  if (url.pathname === "/help") {
+    return new Response(DOCS, {
+      status: 200,
+      headers: {
+        "content-type": "text/html"
+      }
+    });
   }
   const upstream = routeByHosts(url.hostname);
   if (upstream === "") {
